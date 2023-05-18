@@ -1,0 +1,26 @@
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  animation-name: slideIn;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+
+@keyframes slideIn {
+  0% {
+    transform: translate(50vw, -50vw) rotate(0deg); 
+  }
+  100% {
+    transform: translate(0, 0) rotate(180deg);
+  }
+}
