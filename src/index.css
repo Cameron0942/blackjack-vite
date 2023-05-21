@@ -10,7 +10,7 @@ body {
 
 .card {
   animation-name: slideIn;
-  animation-duration: 1s;
+  animation-duration: 0.8s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
 }

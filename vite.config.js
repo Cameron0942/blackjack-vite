@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: 'https://cameron0942.github.io/blackjack-vite/',
   plugins: [react()],
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  }
 })

@@ -64,6 +64,8 @@ export const DeckObject = {
           return 10;
         case 'JACK':
           return 10;
+        case 'ACE':
+          return 1;
 
         default:
           return cardValue === "ACE" ? cardValue : parseInt(cardValue);
