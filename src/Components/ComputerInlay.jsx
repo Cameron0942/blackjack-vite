@@ -25,7 +25,14 @@ const ComputerInlay = () => {
         value: 0,
         image: []
     });
+
+    const [hiddenCardCopy, setHiddenCardCopy] = useState({
+        value: 0,
+        image: []
+    })
+
     const [firstHitDealer, setFirstHitDealer] = useState(true);
+    
 
     //? REDUX vars
     const dispatch = useDispatch();
@@ -34,16 +41,19 @@ const ComputerInlay = () => {
     const reduxDealerBust = useSelector((state) => state.game.dealerBust);
     const reduxResetHands = useSelector((state) => state.game.resetHands);
     
+    
     //* Initial get hand
     useEffect(() => {
         const getHand = async () => {
             await DeckObject.getDeck();
             const card1 = DeckObject.getCard();
             const card2 = DeckObject.getCard();
+
+            setHiddenCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
             
-            setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
+            setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, cardBack]}));
             setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
-            // setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
+            // setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, cardBack]}));
         }
         getHand();
     }, []);
@@ -52,16 +62,19 @@ const ComputerInlay = () => {
     const resetHand = () => {
         const timer = setTimeout(() => {
             setHand(previousState => ({...previousState, value: 0, image: []}));
+            setHiddenCardCopy(previousState => ({...previousState, value: 0, image: []}));
 
             const getHand = async () => {
                 await DeckObject.getDeck();
                 const card1 = DeckObject.getCard();
                 const card2 = DeckObject.getCard();
+
+                setHiddenCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
                 
-                setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0]))}));
-                setHand(previousState => ({...previousState, image: [...previousState.image, card1[1]]}));
-                setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0]))}));
-                setHand(previousState => ({...previousState, image: [...previousState.image, card2[1]]}));
+                setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, cardBack]}));
+                // setHand(previousState => ({...previousState, image: [...previousState.image, card1[1]]}));
+                setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
+                // setHand(previousState => ({...previousState, image: [...previousState.image, card2[1]]}));
             }
             getHand();
         }, 2500);
@@ -69,16 +82,37 @@ const ComputerInlay = () => {
         
     };
 
+    //* Handles when the players STAYS
     useEffect(() => {
+
+        if (reduxPlayerBust){
+            console.log("reduxPlayerBust", reduxPlayerBust)
+            return;
+        } 
+
+        //* Replace cardBack image with card copy image
+        if (reduxPlayerStay) {
+            setHand(previousState => ({
+                ...previousState,
+                image: [hiddenCardCopy.image[0], ...previousState.image.slice(1)]
+            })); 
+        }
+
+        //* Get cards if plaer stayed and hand is less than 17
         if(reduxPlayerStay && hand.value <= 16){
               
             const card = DeckObject.getCard();
             
+            //* more reactive for UI so first card flys in as soon as button is pressed
                 if (firstHitDealer){
-                        setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card[0]))}));
-                        setHand(previousState => ({...previousState, image: [...previousState.image, card[1]]}));
-                        setFirstHitDealer(false);                    
+                    const timer = setTimeout(() => {
+                    setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card[0]))}));
+                    setHand(previousState => ({...previousState, image: [...previousState.image, card[1]]}));
+                    setFirstHitDealer(false);      
+                }, 1200);    
+                return () => clearTimeout(timer);          
                 }
+                //* delay for subsequent card pulls
                 else {
                     const timer = setTimeout(() => {
                         setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card[0]))}));
@@ -96,6 +130,8 @@ const ComputerInlay = () => {
         }
         
     }, [reduxPlayerStay, hand.value]);
+
+    
 
 
     useEffect(() => {

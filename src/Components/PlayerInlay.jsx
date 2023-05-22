@@ -12,7 +12,7 @@ import { DeckObject } from '../Deck/DeckObject';
 
 //? REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { setBust, setResetHands, setPlayerStay, dealerBust, setDealerBust } from '../store/gameState/gameSlice';
+import { setPlayerBust, setResetHands, setPlayerStay, dealerBust, setDealerBust } from '../store/gameState/gameSlice';
 
 
 const PlayerInlay = () => {
@@ -36,15 +36,21 @@ const PlayerInlay = () => {
     
 
     const [isBust, setIsBust] = useState(false);
+    const [disableStay, setDisableStay] = useState(false);
 
     const getCardHandler = () => {
-        if (isBust || hand.value === 21){
+        if (isBust || hand.value >= 21){
             return;
         }
         const card = DeckObject.getCard();
         setHand(previousState => ({...previousState, value: (parseInt(previousState.value) + parseInt(card[0]))}));
         setHand(previousState => ({...previousState, image: [...previousState.image, card[1]]}));
         
+    };
+
+    const stayHandler = () => {
+        setDisableStay(true);
+        dispatch(setPlayerStay(true));
     };
 
     const resetHand = () => {
@@ -63,6 +69,7 @@ const PlayerInlay = () => {
                 setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
             }
             getHand();
+            setDisableStay(false);
             }, 2500);
         return () => clearTimeout(timer);
 
@@ -74,7 +81,7 @@ const PlayerInlay = () => {
         }
         if (hand.value > 21) {
             setIsBust(true);
-            dispatch(setBust(true));
+            dispatch(setPlayerBust(true));
             dispatch(setResetHands(true));
         }
         else if (hand.value < 21) {
@@ -112,7 +119,7 @@ const PlayerInlay = () => {
         if (reduxResetHands){
             resetHand();
             setIsBust(false);
-            dispatch(setBust(false));
+            dispatch(setPlayerBust(false));
             dispatch(setResetHands(false));    
         }
         
@@ -142,7 +149,7 @@ const PlayerInlay = () => {
             <Button variant="contained" onClick={getCardHandler} sx={{padding: 4, fontSize: 45}} startIcon={<AddIcon />}>
                 HIT
             </Button>
-            <Button variant="contained" onClick={() => {dispatch(setPlayerStay(true))}} sx={{padding: 4, fontSize: 45}} startIcon={<AddIcon />}>
+            <Button disabled={disableStay} variant="contained" onClick={stayHandler} sx={{padding: 4, fontSize: 45}} startIcon={<AddIcon />}>
                 STAY
             </Button>
             <Button variant="contained" sx={{padding: 4, fontSize: 45}} startIcon={<AddIcon />}>

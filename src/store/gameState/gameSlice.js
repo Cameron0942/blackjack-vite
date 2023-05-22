@@ -26,7 +26,7 @@ export const gameSlice = createSlice({
         incrementByAmount: (state, action) => {
             state.count += action.payload;
         },
-        setBust: (state, action) => {
+        setPlayerBust: (state, action) => {
             state.playerBust = action.payload;
         },
         setPlayerStay: (state, action) => {
@@ -41,6 +41,6 @@ export const gameSlice = createSlice({
     }
 });
 
-export const { increment, decrement, reset, incrementByAmount, setBust, setResetHands, setPlayerStay, setDealerBust, dealerBust } = gameSlice.actions;
+export const { increment, decrement, reset, incrementByAmount, playerBust, setPlayerBust, setResetHands, setPlayerStay, setDealerBust, dealerBust } = gameSlice.actions;
 
 export default gameSlice.reducer;

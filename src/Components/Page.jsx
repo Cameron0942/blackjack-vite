@@ -12,7 +12,6 @@ const Page = () => {
             <Title />
             <ComputerInlay />
             <PlayerInlay />
-            <Counter />
         </div>
     );
 };
