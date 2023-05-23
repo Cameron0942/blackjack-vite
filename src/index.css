@@ -15,7 +15,89 @@ body {
   animation-fill-mode: forwards;
 }
 
+.player-hand-value-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 5vw;
+  height: 5vw;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  margin-right: 0.5em;
+  overflow: hidden;
+}
 
+.player-hand-value {
+  top: 50%;
+  left: 50%;
+  color: white;
+  font-size: 3.5vw;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.player-text {
+  color: #32bb3e;
+  font-size: 2.3vw;
+}
+
+.player-21.player-hand-value{
+  top: 10%;
+  left: 0.78vw;
+  transition: color 0.3s ease;
+  transform-origin: center;
+  background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: rainbow 3s linear infinite, grow-shrink 1s ease-in-out infinite;
+}
+
+.dealer-hand-value-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 5vw;
+  height: 5vw;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  margin-right: 0.5em;
+  overflow: hidden;
+}
+
+.dealer-hand-value {
+  top: 50%;
+  left: 50%;
+  color: white;
+  font-size: 3.5vw;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.dealer-text {
+  color: #32bb3e;
+  font-size: 2.3vw;
+}
+
+/* Player got 21 animation */
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes grow-shrink {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Card animation */
 @keyframes slideIn {
   0% {
     transform: translate(50vw, -50vw) rotate(0deg); 
