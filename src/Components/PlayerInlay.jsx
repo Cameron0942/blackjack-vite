@@ -12,7 +12,7 @@ import { DeckObject } from '../Deck/DeckObject';
 
 //? REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { setPlayerBust, setResetHands, setPlayerStay, setPlayerHandValue, evaluateWinner, winner, resetWinner } from '../store/gameState/gameSlice';
+import { setPlayerBust, setResetHands, setPlayerStay, setPlayerHandValue, evaluateWinner, resetWinner } from '../store/gameState/gameSlice';
 
 
 const PlayerInlay = () => {
@@ -28,25 +28,13 @@ const PlayerInlay = () => {
 
     //? REDUX vars
     const dispatch = useDispatch();
-    const reduxPlayerBust = useSelector((state) => state.game.playerBust);
     const reduxResetHands = useSelector((state) => state.game.resetHands);
-    const reduxPlayerStay = useSelector((state) => state.game.playerStay);
     const reduxWinner = useSelector((state) => state.game.winner);
-
-    
 
     const [isBust, setIsBust] = useState(false);
     const [disableStay, setDisableStay] = useState(false);
     const [disableHit, setDisableHit] = useState(false);
     const [winner, setWinner] = useState('');
-
-    
-    useEffect(() => {
-        if (reduxWinner !== '') {
-            setWinner(reduxWinner)
-        }
-        
-    }, [reduxWinner])
 
     const getCardHandler = () => {
         if (isBust || hand.value >= 21){
@@ -66,6 +54,14 @@ const PlayerInlay = () => {
     const resetHand = () => {
         dispatch(resetWinner());
         dispatch(setPlayerStay(false));
+
+        const removeOverlay = document.querySelector('.winner-overlay');
+        if (removeOverlay) {
+            setTimeout(() => {
+          removeOverlay.classList.remove('winner-overlay-active');
+        }, 3000);
+        }
+
         const timer = setTimeout(() => {
             //* Reset hand useState
             setHand(previousState => ({...previousState, value: 0, image: []}));
@@ -125,6 +121,19 @@ const PlayerInlay = () => {
         getHand();
     }, []);
 
+    useEffect(() => {
+        if (reduxWinner !== '') {
+            setWinner(reduxWinner);
+            const addOverlay = document.querySelector('.winner-overlay');
+            if (addOverlay) {
+                setTimeout(() => {
+                addOverlay.classList.add('winner-overlay-active');
+            }, 1000);
+            }         
+        }
+        
+    }, [reduxWinner]);
+
 
 
     //* Whenever hand.value changes
@@ -134,16 +143,12 @@ const PlayerInlay = () => {
         // dispatch(evaluateWinner());
     }, [hand.value]);
 
-
-
     useEffect(() => {
         if (reduxResetHands){
             resetHand();
             setIsBust(false);
-            
             dispatch(setResetHands(false));
         }
-        
     }, [reduxResetHands]); 
 
     return(
@@ -151,7 +156,6 @@ const PlayerInlay = () => {
             <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', marginTop: 0, paddingLeft: 15 }}>
                 <Grid item md={9} sx={{}}>
                     {hand.image.map((image, index) => 
-                        // <img className='card' key={index} src={image} alt="" style={{maxHeight: '300px'}} />
                         <img
                             className='card'
                             key={index}
@@ -166,7 +170,7 @@ const PlayerInlay = () => {
                 </Grid>
             </Grid>
             <div style={{textAlign: 'center'}}>
-                <h1>{ winner }</h1>
+                <span className='winner-overlay' style={{color: 'white', textShadow: '2px 2px 4px black'}}>{ winner !== '' ? `${winner} Wins` : '' }</span>
             <Button disabled={disableHit} variant="contained" onClick={getCardHandler} sx={{padding: 4, fontSize: 45}} startIcon={<AddIcon />}>
                 HIT
             </Button>

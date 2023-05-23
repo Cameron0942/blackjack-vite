@@ -2,7 +2,6 @@
 import PlayerInlay from "./PlayerInlay";
 import Title from "./Title";
 import ComputerInlay from "./ComputerInlay";
-import Counter from "../store/gameState/Counter";
 
 
 const Page = () => {

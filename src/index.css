@@ -45,7 +45,7 @@ body {
   left: 0.78vw;
   transition: color 0.3s ease;
   transform-origin: center;
-  background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red, orange, yellow, green, blue, indigo, violet);
+  background-image: linear-gradient(to right, red, orange, yellow, green, rgb(196, 196, 238), indigo, violet, red, orange, yellow, green, rgb(196, 196, 238), indigo, violet);
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
@@ -77,6 +77,31 @@ body {
   color: #32bb3e;
   font-size: 2.3vw;
 }
+.winner-overlay {
+  display: none;
+}
+
+.winner-overlay-active {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 48px;
+}
+
+.winner-overlay-active span {
+  padding: 10px;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+}
+
 
 /* Player got 21 animation */
 @keyframes rainbow {

@@ -10,7 +10,7 @@ import { DeckObject } from '../Deck/DeckObject';
 
 //? REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { setDealerBust, setDealerHandValue, setPlayerStay, setResetHands, evaluateWinner, winner, resetWinner } from '../store/gameState/gameSlice';
+import { setDealerBust, setDealerHandValue, setPlayerStay, setResetHands, evaluateWinner, resetWinner } from '../store/gameState/gameSlice';
 
 //? IMAGES
 import cardBack from '../assets/Images/playing-card-back.jpg';
@@ -43,8 +43,6 @@ const ComputerInlay = () => {
     const dispatch = useDispatch();
     const reduxPlayerBust = useSelector((state) => state.game.playerBust);
     const reduxPlayerStay = useSelector((state) => state.game.playerStay);
-    const reduxDealerBust = useSelector((state) => state.game.dealerBust);
-    const reduxDealerHandValue = useSelector((state) => state.game.dealerHandValue);
     const reduxResetHands = useSelector((state) => state.game.resetHands);
     const reduxWinner = useSelector((state) => state.game.winner);
 
@@ -56,28 +54,9 @@ const ComputerInlay = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reduxWinner]);
 
-    //! ______________________________________________________________________________________________
-    useEffect(() => {
-        console.log("___hand changed___")
-        console.log(hand);
-    }, [hand]);
-
-    useEffect(() => {
-        // if the card value is not in its default state which is 0
-        if (shownCardCopy.value !== 0){
-            console.log("__shown card copy__")
-            console.log(shownCardCopy.value);
-        }
-    }, [shownCardCopy]);
-
-    //! ______________________________________________________________________________________________
-
-
-
 
     //if player busts then show the hidden card, but from the copied version
     useEffect(() => {
-        console.log("reduxPlayerBust", reduxPlayerBust)
         if (reduxPlayerBust) {
             setHand(previousState => ({
                 ...previousState,
@@ -106,6 +85,7 @@ const ComputerInlay = () => {
 
 
     const resetHand = () => {
+        dispatch(resetWinner());
         const timer = setTimeout(() => {
             setHand(previousState => ({...previousState, value: 0, image: []}));
             setHiddenCardCopy(previousState => ({...previousState, value: 0, image: []}));
@@ -121,9 +101,7 @@ const ComputerInlay = () => {
                 setHiddenCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
                 
                 setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, cardBack]}));
-                // setHand(previousState => ({...previousState, image: [...previousState.image, card1[1]]}));
                 setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
-                // setHand(previousState => ({...previousState, image: [...previousState.image, card2[1]]}));
             }
             getHand();
         }, 2500);

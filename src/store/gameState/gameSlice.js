@@ -15,18 +15,6 @@ export const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        increment: (state) => {
-            state.count += 1;
-        },
-        decrement: (state) => {
-            state.count -= 1;
-        },
-        reset: (state) => {
-            state.count = 0;
-        },
-        incrementByAmount: (state, action) => {
-            state.count += action.payload;
-        },
         setPlayerHandValue: (state, action) => {
             state.playerHandValue = action.payload;
         },
@@ -64,6 +52,6 @@ export const gameSlice = createSlice({
     }
 });
 
-export const { increment, decrement, reset, incrementByAmount, playerBust, setPlayerBust, setResetHands, setPlayerStay, setPlayerHandValue, setDealerBust, dealerBust, setDealerHandValue, evaluateWinner, winner, resetWinner } = gameSlice.actions;
+export const { playerBust, setPlayerBust, setResetHands, setPlayerStay, setPlayerHandValue, setDealerBust, dealerBust, setDealerHandValue, evaluateWinner, winner, resetWinner } = gameSlice.actions;
 
 export default gameSlice.reducer;
