@@ -12,7 +12,7 @@ import { DeckObject } from '../Deck/DeckObject';
 
 //? REDUX
 import { useSelector, useDispatch } from 'react-redux';
-import { setPlayerBust, setResetHands, setPlayerStay, setPlayerHandValue, evaluateWinner, resetWinner } from '../store/gameState/gameSlice';
+import { setPlayerBust, setResetHands, setPlayerStay, setPlayerHandValue, evaluateWinner, resetWinner} from '../store/gameState/gameSlice';
 
 
 const PlayerInlay = () => {
@@ -154,7 +154,7 @@ const PlayerInlay = () => {
           let temp = parseInt(hand.value - 10);
           hand.value -= 10;
           setHand((previousState) => ({ ...previousState, value: temp }));
-          setAceCount(aceCount - 1); // Decrease aceCount by 1
+          setAceCount(aceCount - 1); 
           return;
         } else if (aceCount >= 1 && handValueNoAce.current > 21) {
           let temp = parseInt(hand.value + 10);
@@ -230,7 +230,7 @@ const PlayerInlay = () => {
 
     return(
         <>
-            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', marginTop: 0, paddingLeft: 15 }}>
+            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', marginTop: 0, paddingLeft: 0 }}>
                 <Grid item md={9} sx={{}}>
                     {hand.image.map((image, index) => 
                         <img

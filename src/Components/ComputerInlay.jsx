@@ -70,8 +70,21 @@ const ComputerInlay = () => {
     useEffect(() => {
         const getHand = async () => {
             await DeckObject.getDeck();
-            const card1 = DeckObject.getCard();
-            const card2 = DeckObject.getCard();
+            let card1 = DeckObject.getCard();
+            let card2 = DeckObject.getCard();
+
+            //! I am not letting the dealer get aces because I don't feel like building the dealer ace logic
+            if (card1[0] === 11){
+                while(card1[0] !== 11){
+                    card1 = DeckObject.getCard();
+                }
+            }
+
+            if (card2[0] === 11){
+                while(card2[0] === 11){
+                    card2 = DeckObject.getCard();
+                }
+            }
 
             setShownCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
             setHiddenCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
@@ -94,8 +107,21 @@ const ComputerInlay = () => {
 
             const getHand = async () => {
                 await DeckObject.getDeck();
-                const card1 = DeckObject.getCard();
-                const card2 = DeckObject.getCard();
+                let card1 = DeckObject.getCard();
+                let card2 = DeckObject.getCard();
+
+                //! I am not letting the dealer get aces because I don't feel like building the dealer ace logic
+                if (card1[0] === 11){
+                    while(card1[0] === 11){
+                        card1 = DeckObject.getCard();
+                    }
+                }
+    
+                if (card2[0] === 11){
+                    while(card2[0] === 11){
+                        card2 = DeckObject.getCard();
+                    }
+                }
 
                 setShownCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
                 setHiddenCardCopy(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
@@ -125,7 +151,13 @@ const ComputerInlay = () => {
         //* Get cards if plaer stayed and hand is less than 17
         if(reduxPlayerStay && hand.value <= 16){
               
-            const card = DeckObject.getCard();
+            let card = DeckObject.getCard();
+
+            if (card[0] === 11){
+                while(card[0] === 11){
+                    card = DeckObject.getCard();
+                }
+            }
             
             
             //* more reactive for UI so first card flys in as soon as button is pressed
@@ -189,7 +221,7 @@ const ComputerInlay = () => {
 
     return(
         <>
-            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', paddingLeft: 15}}>
+            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', paddingLeft: 0}}>
                 <Grid item md={9} sx={{}}>
                     {hand.image.map((image, index) => 
                         <img
