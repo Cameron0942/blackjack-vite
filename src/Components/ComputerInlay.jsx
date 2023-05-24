@@ -221,7 +221,7 @@ const ComputerInlay = () => {
 
     return(
         <>
-            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', paddingLeft: 0}}>
+            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderTopRightRadius: '5px', borderTopLeftRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', paddingLeft: 0}}>
                 <Grid item md={9} sx={{}}>
                     {hand.image.map((image, index) => 
                         <img

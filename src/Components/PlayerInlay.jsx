@@ -230,7 +230,7 @@ const PlayerInlay = () => {
 
     return(
         <>
-            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderRadius: '5px', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', marginTop: 0, paddingLeft: 0 }}>
+            <Grid container spacing={2}  sx={{background: 'rgba(0, 0, 0, 0.3);', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px', borderTop: '2px solid black', height: ArenaSize.height, width: ArenaSize.width, marginLeft: 'auto', marginRight: 'auto', marginTop: 0, paddingLeft: 0 }}>
                 <Grid item md={9} sx={{}}>
                     {hand.image.map((image, index) => 
                         <img
@@ -247,7 +247,7 @@ const PlayerInlay = () => {
                 </Grid>
             </Grid>
             <div style={{textAlign: 'center'}}>
-                <span className='winner-overlay' style={{color: 'white', textShadow: '2px 2px 4px black'}}>{ winner !== '' ? `${winner} Wins` : '' }</span>
+                <span className='winner-overlay' style={{color: 'white', textShadow: '2px 2px 4px black'}}>{ winner === 'Dealer' || winner === 'Player' ? `${winner} Wins` : winner === 'Push' ? 'Push' : '' }</span>
             <Button disabled={disableHit} variant="contained" onClick={getCardHandler} sx={{padding: 4, fontSize: 45}} startIcon={<AddIcon />}>
                 HIT
             </Button>
