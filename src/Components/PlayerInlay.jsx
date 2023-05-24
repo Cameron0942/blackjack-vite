@@ -1,5 +1,5 @@
 //? REACT
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // import ReactDOM from 'react-dom/client'
 
 //? MATERIAL UI
@@ -35,12 +35,19 @@ const PlayerInlay = () => {
     const [disableStay, setDisableStay] = useState(false);
     const [disableHit, setDisableHit] = useState(false);
     const [winner, setWinner] = useState('');
+    let [aceCount, setAceCount] = useState(0);
+    let handValueNoAce = useRef(0);
 
     const getCardHandler = () => {
         if (isBust || hand.value >= 21){
             return;
         }
         const card = DeckObject.getCard();
+        
+        //If ace is pulled add 1 to ace count, else add card value to handValueNoAce
+        if (card[0] === 11) setAceCount(aceCount + 1);
+        else handValueNoAce.current += card[0];
+        
         setHand(previousState => ({...previousState, value: (parseInt(previousState.value) + parseInt(card[0]))}));
         setHand(previousState => ({...previousState, image: [...previousState.image, card[1]]}));
     };
@@ -54,7 +61,9 @@ const PlayerInlay = () => {
     const resetHand = () => {
         dispatch(resetWinner());
         dispatch(setPlayerStay(false));
-
+        handValueNoAce.current = 0;
+        setAceCount(0);
+        
         const removeOverlay = document.querySelector('.winner-overlay');
         if (removeOverlay) {
             setTimeout(() => {
@@ -73,6 +82,12 @@ const PlayerInlay = () => {
                 const card1 = DeckObject.getCard();
                 const card2 = DeckObject.getCard();
 
+                //if either pulled card is an ace add 1 to aceCount, else add card value into handValueNoAce
+                if (card1[0] === 11) setAceCount(aceCount + 1);
+                else handValueNoAce.current += card1[0];
+                if (card2[0] === 11) setAceCount(aceCount + 1);
+                else handValueNoAce.current += card2[0];
+
                 setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0])), image: [...previousState.image, card1[1]]}));
                 setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card2[0])), image: [...previousState.image, card2[1]]}));
             }
@@ -84,26 +99,83 @@ const PlayerInlay = () => {
 
     };
 
+    //* original checkScore
+    // const checkScore = () => {
+    //     if (hand.value === 21) {
+    //         setDisableStay(true);
+    //         setDisableHit(true);
+    //         const timer = setTimeout(() => {
+    //             dispatch(setPlayerStay(true));
+    //         }, 3000);
+    //         return () => clearTimeout(timer);
+    //     }
+        
+    //     if (aceCount >= 1 && (handValueNoAce.current + 11) > 21 && hand.value > 21){
+    //         let temp = parseInt(hand.value - 10);
+    //         hand.value -= 10;
+    //         setHand(previousState => ({...previousState, value: temp}));
+    //         return;
+    //     }
+    //     else if(aceCount >= 1 && handValueNoAce.current >= 21){
+    //         let temp = parseInt(hand.value + 10);
+    //         setHand(previousState => ({...previousState, value: temp}));
+    //         setIsBust(true);
+    //         setDisableHit(true);
+    //         setDisableStay(true);
+    //         dispatch(setPlayerBust(true));
+    //         dispatch(setResetHands(true));
+    //         dispatch(evaluateWinner());
+    //     }
+    //     else if (hand.value > 21) {   
+    //         setIsBust(true);
+    //         setDisableHit(true);
+    //         setDisableStay(true);
+    //         dispatch(setPlayerBust(true));
+    //         dispatch(setResetHands(true));
+    //         dispatch(evaluateWinner());
+    //     }
+    //     else if (hand.value < 21) {
+    //         dispatch(setResetHands(false));
+    //     }
+        
+    // }
+
     const checkScore = () => {
         if (hand.value === 21) {
-            const timer = setTimeout(() => {
-                dispatch(setPlayerStay(true));
-            }, 3000);
-            return () => clearTimeout(timer);
+          setDisableStay(true);
+          setDisableHit(true);
+          const timer = setTimeout(() => {
+            dispatch(setPlayerStay(true));
+          }, 3000);
+          return () => clearTimeout(timer);
         }
-        if (hand.value > 21) {
-            setIsBust(true);
-            setDisableHit(true);
-            setDisableStay(true);
-            dispatch(setPlayerBust(true));
-            dispatch(setResetHands(true));
-            dispatch(evaluateWinner());
+      
+        if (aceCount >= 1 && (handValueNoAce.current + 11) > 21 && hand.value > 21) {
+          let temp = parseInt(hand.value - 10);
+          hand.value -= 10;
+          setHand((previousState) => ({ ...previousState, value: temp }));
+          setAceCount(aceCount - 1); // Decrease aceCount by 1
+          return;
+        } else if (aceCount >= 1 && handValueNoAce.current > 21) {
+          let temp = parseInt(hand.value + 10);
+          setHand((previousState) => ({ ...previousState, value: temp }));
+          setIsBust(true);
+          setDisableHit(true);
+          setDisableStay(true);
+          dispatch(setPlayerBust(true));
+          dispatch(setResetHands(true));
+          dispatch(evaluateWinner());
+        } else if (hand.value > 21) {
+          setIsBust(true);
+          setDisableHit(true);
+          setDisableStay(true);
+          dispatch(setPlayerBust(true));
+          dispatch(setResetHands(true));
+          dispatch(evaluateWinner());
+        } else if (hand.value < 21) {
+          dispatch(setResetHands(false));
         }
-        else if (hand.value < 21) {
-            dispatch(setResetHands(false));
-        }
-        
-    }
+      };
 
     //* Initial get hand
     useEffect(() => {
@@ -112,6 +184,12 @@ const PlayerInlay = () => {
             await DeckObject.getDeck();
             const card1 = await DeckObject.getCard();
             const card2 = await DeckObject.getCard();
+
+            //if either pulled card is an ace add 1 to aceCount, else add card value into handValueNoAce
+            if (card1[0] === 11) setAceCount(aceCount + 1);
+            else handValueNoAce.current += card1[0];
+            if (card2[0] === 11) setAceCount(aceCount + 1);
+            else handValueNoAce.current += card2[0];
             
             setHand(previousState => ({...previousState, value:(parseInt(previousState.value) + parseInt(card1[0]))}));
             setHand(previousState => ({...previousState, image: [...previousState.image, card1[1]]}));
@@ -140,7 +218,6 @@ const PlayerInlay = () => {
     useEffect(() => {
         checkScore(hand.value);
         dispatch(setPlayerHandValue(hand.value));
-        // dispatch(evaluateWinner());
     }, [hand.value]);
 
     useEffect(() => {
