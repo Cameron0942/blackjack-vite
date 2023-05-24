@@ -1,6 +1,5 @@
 {
   "name": "blackjack-app",
-  "homepage": "https://cameron0942.github.io/blackjack-vite/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
